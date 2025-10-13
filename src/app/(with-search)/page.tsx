@@ -1,8 +1,24 @@
-// module.css 가 기본임
-import styles from "./page.module.css";
+import goods from "@/mock/good.json";
+import styles from "@/app/(with-search)/page.module.css";
+import GoodItem from "@/components/GoodItem";
 
-function Page() {
-  return <div className={styles.page}></div>;
+function Home() {
+  return (
+    <div className={styles.container}>
+      <section>
+        <h3>지금 추천하는 상품</h3>
+        {goods.map((item) => (
+          <GoodItem key={item.id} {...item} />
+        ))}
+      </section>
+      <section>
+        <h3>전체 상품</h3>
+        {goods.map((item) => (
+          <GoodItem key={item.id} {...item} />
+        ))}
+      </section>
+    </div>
+  );
 }
 
-export default Page;
+export default Home;
