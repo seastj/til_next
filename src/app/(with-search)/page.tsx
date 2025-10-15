@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 // 1. 전체 제품 목록 가져오기
 async function AllGoods() {
   // 수업을 위해서 강제로 delay 시킴
-  await delay(1500);
+  // await delay(1500);
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/products?limit=10`,
@@ -30,11 +30,10 @@ async function AllGoods() {
 // 2. 추천 상품 목록
 async function RecommendGoods() {
   // 수업을 위해서 강제로 delay 시킴
-  await delay(1500);
+  // await delay(1500);
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/products?limit=3`,
-    { next: { revalidate: 3600 } }
+    `${process.env.NEXT_PUBLIC_API_URL}/products?limit=3`
   );
   const allGoods: GoodDataType[] = await response.json();
   return (
