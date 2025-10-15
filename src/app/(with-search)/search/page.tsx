@@ -1,16 +1,20 @@
 import styles from "@/app/(with-search)/search/page.module.css";
 import GoodItem from "@/components/GoodItem";
-import goods from "@/mock/good.json";
 import { GoodDataType } from "@/types/types";
+import { delay } from "@/util/delay";
+import { Suspense } from "react";
 
-interface PageProps {
-  searchParams: Promise<{ keyword: string }>;
+// 실제로는 외부 컴포넌트로 추출하기를 권장 : components 폴더/SearchResult.tsx
+// 리액트 Suspense 로 세밀하게 로딩 처리하기
+
+interface SearchResultProps {
+  keyword: string;
 }
 
-async function Page({ searchParams }: PageProps) {
-  const { keyword } = await searchParams;
-  // fetch 를 활용한 검색
-  // js 내장 fetch 가 아닌 Next.js 의 fetch 활용
+async function SearchResult({ keyword }: SearchResultProps) {
+  // 일부러 시간을 지연시킴
+  await delay(1500);
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/products/category/${keyword}`
   );
@@ -27,6 +31,20 @@ async function Page({ searchParams }: PageProps) {
         ))}
       </div>
     </div>
+  );
+}
+
+interface PageProps {
+  searchParams: Promise<{ keyword: string }>;
+}
+
+async function Page({ searchParams }: PageProps) {
+  const { keyword } = await searchParams;
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchResult keyword={keyword} />;
+    </Suspense>
   );
 }
 
