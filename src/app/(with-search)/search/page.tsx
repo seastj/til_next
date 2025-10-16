@@ -6,7 +6,6 @@ import { Suspense } from "react";
 
 // 실제로는 외부 컴포넌트로 추출하기를 권장 : components 폴더/SearchResult.tsx
 // 리액트 Suspense 로 세밀하게 로딩 처리하기
-
 interface SearchResultProps {
   keyword: string;
 }
@@ -33,6 +32,23 @@ async function SearchResult({ keyword }: SearchResultProps) {
     </div>
   );
 }
+
+export const generateMetadata = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ keyword: string }>;
+}) => {
+  const { keyword } = await searchParams;
+  return {
+    title: `상품 ${keyword} 검색 페이지`,
+    description: `상품 ${keyword} 검색 페이지입니다.`,
+    openGraph: {
+      title: `상품 ${keyword} 검색 페이지`,
+      description: `상품 ${keyword} 검색 페이지입니다.`,
+      images: [{ url: "/thumbnail.png" }],
+    },
+  };
+};
 
 interface PageProps {
   searchParams: Promise<{ keyword: string }>;

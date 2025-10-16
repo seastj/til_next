@@ -1,6 +1,13 @@
 import "@/app/globals.css";
 import styles from "@/app/layout.module.css";
+import { Metadata } from "next";
 import Link from "next/link";
+
+// SEO 설정
+export const metadata: Metadata = {
+  title: "내가 만드는 쇼핑몰",
+  description: "쇼핑몰 만드는 것에 대한 소개글 입니다.",
+};
 
 interface RootLayoutProps {
   children: React.ReactNode;
