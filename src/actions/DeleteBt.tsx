@@ -1,0 +1,36 @@
+"use client";
+
+import styles from "@/actions/DeleteBt.module.css";
+import { GoodDataType } from "@/types/types";
+import { useActionState, useEffect, useRef } from "react";
+import { deleteAction } from "./deleteActions";
+
+const DeleteBt = ({ id }: { id: number }) => {
+  const [state, formAction, isPending] = useActionState(deleteAction, null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (state && !state.message) {
+      alert(state.message);
+    }
+  }, [state]);
+  return (
+    <>
+      <form action={formAction} className={styles.container} ref={formRef}>
+        <input type="hidden" name="goodId" value={id} readOnly hidden />
+        {isPending ? (
+          <div className={styles.delete_btn}>Deleting...</div>
+        ) : (
+          <div
+            className={styles.delete_btn}
+            onClick={() => formRef.current?.requestSubmit()}
+          >
+            Delete
+          </div>
+        )}
+      </form>
+    </>
+  );
+};
+
+export default DeleteBt;

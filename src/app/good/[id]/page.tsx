@@ -1,21 +1,20 @@
-import { GoodDataType } from "@/types/types";
 import styles from "@/app/good/[id]/page.module.css";
+import CateList from "@/components/CateList";
+import ReviewForm from "@/components/ReviewForm";
+import { GoodDataType } from "@/types/types";
 import Image from "next/image";
 
-// 약속된 Next 함수임 (미리 페이지를 Static 이고, SSR 페이지 이다.)
-export function generateStaticParams() {
-  return [{ id: "1" }, { id: "2" }, { id: "3" }];
+// 제품 상세 정보 출력 컴포넌트 : components 에 별도로 추출하길 권장
+interface GoodDetailProps {
+  id: string;
 }
 
-interface PageProps {
-  params: Promise<{ id: string }>;
-}
-async function Page({ params }: PageProps) {
-  const { id } = await params;
-  // fetch 를 이용한 자료 출력
+async function GoodDetail({ id }: GoodDetailProps) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`
+    `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
+    { next: { tags: [`good-${id}`] } }
   );
+
   const good: GoodDataType = await response.json();
 
   const { title, image, category, description, rating } = good;
@@ -32,7 +31,27 @@ async function Page({ params }: PageProps) {
       <div className={styles.rating}>
         Rating : {rating.rate} | {rating.count}
       </div>
-      <div className={styles.discription}>{description}</div>
+      <div className={styles.description}>{description}</div>
+    </div>
+  );
+}
+
+// 약속된 Next 함수임 (미리 페이지를 Static 이고, SSR 페이지 이다.)
+export function generateStaticParams() {
+  return [{ id: "1" }, { id: "2" }, { id: "3" }];
+}
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+async function Page({ params }: PageProps) {
+  const { id } = await params;
+
+  return (
+    <div className={styles.container}>
+      <GoodDetail id={id} />
+      <ReviewForm />
+      <CateList id={id} />
     </div>
   );
 }
